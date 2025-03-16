@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Secure Auth</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>Welcome, <%= user.name %></h1>
+            <div class="header-buttons">
+                <a href="/auth/profile" class="btn-profile">Profile</a>
+                <a href="/auth/settings" class="btn-settings">Settings</a>
+                <a href="/auth/security-test" class="btn-settings">Security Test</a>
+                <a href="/auth/logout" class="btn-logout">Logout</a>
+            </div>
+        </header>
+
+        <div class="dashboard-content">
+            <div class="user-info">
+                <h2>Your Profile</h2>
+                <p><strong>Email:</strong> <%= user.email %></p>
+                <p><strong>MFA Status:</strong> Enabled</p>
+            </div>
+
+            <div class="security-section">
+                <h2>Security Settings</h2>
+                <div class="security-options">
+                    <button id="regenerateBackupCodes" class="btn-secondary">Generate New Backup Codes</button>
+                    <button id="resetMFA" class="btn-secondary">Reset MFA Device</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="nav-links">
+        <a href="/auth/settings" class="btn">Account Settings</a>
+        <a href="/auth/logout" class="btn">Logout</a>
+    </div>
+
+    <script src="/js/dashboard.js"></script>
+</body>
+</html> 

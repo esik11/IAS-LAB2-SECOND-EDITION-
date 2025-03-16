@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Settings - Secure Auth</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Account Settings</h1>
+        
+        <div class="backup-email-section">
+            <h3>Backup Email Management</h3>
+            <div id="currentBackupEmail">
+                <!-- Will be filled by JavaScript -->
+            </div>
+            
+            <form id="backupEmailForm">
+                <input type="email" id="backupEmail" placeholder="Enter backup email">
+                <button type="submit">Add Backup Email</button>
+            </form>
+            
+            <div id="verificationSection" style="display: none;">
+                <input type="text" id="verificationCode" placeholder="Enter verification code">
+                <button onclick="verifyBackupEmail()">Verify</button>
+            </div>
+            
+            <div class="test-section">
+                <button onclick="testBackupEmail()">Test Backup Email</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/settings.js"></script>
+</body>
+</html> 

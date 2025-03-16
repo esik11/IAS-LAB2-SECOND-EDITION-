@@ -1,0 +1,40 @@
+{
+  "name": "SecureAuth",
+  "short_name": "SecureAuth",
+  "description": "Secure Authentication System with 2FA and Encryption",
+  "start_url": "/",
+  "id": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "fullscreen", "minimal-ui"],
+  "background_color": "#ffffff",
+  "theme_color": "#4a90e2",
+  "orientation": "portrait",
+  "scope": "/",
+  "prefer_related_applications": false,
+  "categories": ["security", "utilities"],
+  "lang": "en",
+  "dir": "ltr",
+  "icons": [
+    {
+      "src": "/images/icon-180x180.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/screenshot.png",
+      "sizes": "1170x2532",
+      "type": "image/png",
+      "platform": "narrow",
+      "label": "SecureAuth App"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Login",
+      "url": "/login",
+      "icons": [{ "src": "/images/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ]
+} 

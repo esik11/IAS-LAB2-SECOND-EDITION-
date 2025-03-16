@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Basic favicon -->
+    <link rel="icon" href="/favicon.ico">
+    
+    <!-- Essential PWA Meta Tags -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="SecureAuth">
+    
+    <!-- PWA Icons -->
+    <link rel="apple-touch-icon" href="/images/icon-180x180.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Super Simple Debug Panel -->
+    <script>
+        console.log('Debug script starting...'); // Console log to verify script runs
+        
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('Creating debug panel...'); // Console log to verify event listener
+            
+            // Create a VERY visible debug panel
+            const debugPanel = document.createElement('div');
+            debugPanel.innerHTML = `
+                <div style="
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    background: red;
+                    color: white;
+                    padding: 20px;
+                    font-size: 16px;
+                    font-family: Arial;
+                    z-index: 99999;
+                    text-align: center;
+                ">
+                    <h2>DEBUG PANEL</h2>
+                    <p>If you see this, debugging is working!</p>
+                    <p>URL: ${window.location.href}</p>
+                    <p>Time: ${new Date().toLocaleTimeString()}</p>
+                </div>
+            `;
+            
+            // Add to page
+            document.body.insertBefore(debugPanel, document.body.firstChild);
+            console.log('Debug panel added'); // Console log to verify panel was added
+        });
+    </script>
+    
+    <title>SecureAuth</title>
+</head>
+<body>
+        <%- body %>
+</body>
+</html> 

@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Security Test Dashboard</title>
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .status {
+            padding: 5px 10px;
+            border-radius: 3px;
+            color: white;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .status.success { background-color: #28a745; }
+        .status.warning { background-color: #ffc107; }
+        .status.danger { background-color: #dc3545; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>Security Implementation Test</h1>
+            <div class="header-buttons">
+                <a href="/auth/dashboard" class="btn-back">Back to Dashboard</a>
+            </div>
+        </header>
+        
+        <div class="test-section">
+            <h2>Data Encryption Test</h2>
+            <button onclick="testEncryption()" class="btn">Test Encryption</button>
+            <div id="encryptionResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Rate Limiting Test</h2>
+            <button onclick="testRateLimiting()" class="btn">Test Rate Limiting</button>
+            <div id="rateLimitResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>Security Headers</h2>
+            <button onclick="checkSecurityHeaders()" class="btn">Check Headers</button>
+            <div id="headersResult"></div>
+        </div>
+
+        <div class="test-section">
+            <h2>HTTPS Status</h2>
+            <div id="httpsStatus"></div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        // Check HTTPS
+        const protocol = window.location.protocol;
+        const httpsStatus = document.getElementById('httpsStatus');
+        httpsStatus.innerHTML = `
+            <p>Connection: ${protocol}</p>
+            <span class="status ${protocol === 'https:' ? 'success' : 'warning'}">
+                ${protocol === 'https:' ? 'Secure' : 'Not Secure'}
+            </span>
+        `;
+
+        // Initial security check
+        await checkAllSecurity();
+    });
+
+    async function checkAllSecurity() {
+        try {
+            const response = await fetch('/auth/test-security');
+            const data = await response.json();
+            
+            if (data.success) {
+                updateEncryptionStatus(data.encryption);
+                updateRateLimitStatus(data.rateLimiting);
+                updateHeadersStatus(data.securityHeaders);
+            } else {
+                throw new Error(data.error || 'Security check failed');
+            }
+        } catch (error) {
+            console.error('Security check failed:', error);
+            showError('Security check failed. Please try again.');
+        }
+    }
+
+    function updateEncryptionStatus(encryption = {}) {
+        const el = document.getElementById('encryptionResult');
+        el.innerHTML = `
+            <p>Phone Encryption: 
+                <span class="status ${encryption.hasEncryptedPhone ? 'success' : 'danger'}">
+                    ${encryption.hasEncryptedPhone ? 'Enabled' : 'Not Found'}
+                </span>
+            </p>
+            <p>Address Encryption: 
+                <span class="status ${encryption.hasEncryptedAddress ? 'success' : 'danger'}">
+                    ${encryption.hasEncryptedAddress ? 'Enabled' : 'Not Found'}
+                </span>
+            </p>
+        `;
+    }
+
+    function updateRateLimitStatus(rateLimit = {}) {
+        const el = document.getElementById('rateLimitResult');
+        el.innerHTML = `
+            <p>Rate Limiting: 
+                <span class="status ${rateLimit.enabled ? 'success' : 'danger'}">
+                    ${rateLimit.enabled ? 'Enabled' : 'Disabled'}
+                </span>
+            </p>
+            ${rateLimit.enabled ? `
+                <p>Remaining Requests: ${rateLimit.remaining}</p>
+                <p>Reset Time: ${new Date(rateLimit.resetTime).toLocaleTimeString()}</p>
+            ` : ''}
+        `;
+    }
+
+    function updateHeadersStatus(headers = {}) {
+        const el = document.getElementById('headersResult');
+        el.innerHTML = Object.entries(headers)
+            .map(([key, value]) => `
+                <p>${key}: 
+                    <span class="status ${value ? 'success' : 'danger'}">
+                        ${value || 'Not Set'}
+                    </span>
+                </p>
+            `).join('');
+    }
+
+    function showError(message) {
+        const sections = ['encryptionResult', 'rateLimitResult', 'headersResult'];
+        sections.forEach(id => {
+            const el = document.getElementById(id);
+            el.innerHTML = `<p class="status danger">${message}</p>`;
+        });
+    }
+
+    async function testEncryption() {
+        try {
+            const response = await fetch('/auth/test-security');
+            const data = await response.json();
+            if (data.success) {
+                updateEncryptionStatus(data.encryption);
+            } else {
+                throw new Error(data.error || 'Encryption test failed');
+            }
+        } catch (error) {
+            console.error('Encryption test failed:', error);
+            showError('Encryption test failed');
+        }
+    }
+
+    async function testRateLimiting() {
+        const results = [];
+        for (let i = 0; i < 6; i++) {
+            try {
+                const response = await fetch('/auth/test-security');
+                const data = await response.json();
+                if (data.success) {
+                    results.push(`Attempt ${i + 1}: Success (${data.rateLimiting.remaining} remaining)`);
+                } else {
+                    results.push(`Attempt ${i + 1}: Failed`);
+                }
+            } catch (error) {
+                results.push(`Attempt ${i + 1}: Blocked`);
+                break;
+            }
+            await new Promise(resolve => setTimeout(resolve, 100)); // Small delay between requests
+        }
+        document.getElementById('rateLimitResult').innerHTML = results.join('<br>');
+    }
+
+    async function checkSecurityHeaders() {
+        try {
+            const response = await fetch('/auth/test-security');
+            const data = await response.json();
+            if (data.success) {
+                updateHeadersStatus(data.securityHeaders);
+            } else {
+                throw new Error(data.error || 'Headers check failed');
+            }
+        } catch (error) {
+            console.error('Headers check failed:', error);
+            showError('Headers check failed');
+        }
+    }
+    </script>
+</body>
+</html> 
